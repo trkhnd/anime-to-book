@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Anime to Book — Literary Portal</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <canvas id="canvas-bg"></canvas>
+    
+    <div class="content">
+        <div class="container">
+            <div class="header">
+                <h1>📖 ANIME → BOOK</h1>
+                <p class="subtitle">Tell me your favorite anime, and I'll find your next literary obsession</p>
+            </div>
+
+            <div class="input-section">
+                <div class="input-group">
+                    <input type="text" id="animeInput" placeholder="e.g., Attack on Titan, Spirited Away, Death Note..." autocomplete="off">
+                    <button id="recommendBtn">✨ Find My Book ✨</button>
+                </div>
+                <div class="examples">
+                    <span class="example-chip" data-anime="Attack on Titan">⚔️ Attack on Titan</span>
+                    <span class="example-chip" data-anime="Spirited Away">🏮 Spirited Away</span>
+                    <span class="example-chip" data-anime="Death Note">📓 Death Note</span>
+                    <span class="example-chip" data-anime="Your Name">🌠 Your Name</span>
+                    <span class="example-chip" data-anime="Fullmetal Alchemist">⚙️ Fullmetal Alchemist</span>
+                    <span class="example-chip" data-anime="Demon Slayer">🗡️ Demon Slayer</span>
+                </div>
+            </div>
+
+            <div id="resultSection" class="result-section hidden">
+                <div class="book-card">
+                    <div class="book-match" id="matchReason">Based on your taste</div>
+                    <div class="book-title" id="bookTitle">—</div>
+                    <div class="book-author" id="bookAuthor">—</div>
+                    <div class="book-desc" id="bookDesc">Your recommendation will appear here.</div>
+                    <a href="#" id="bookLink" class="explore-link" target="_blank">Discover this book →</a>
+                </div>
+            </div>
+            <footer>
+                <p>✦ Interactive cosmos responds to your movement ✦</p>
+            </footer>
+        </div>
+    </div>
+
+    <script src="js/canvas.js"></script>
+    <script src="js/recommendations.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
