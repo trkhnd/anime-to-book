@@ -131,11 +131,17 @@ const bookDatabase = [
     }
 ];
 
-// Recommendation function
-function getRecommendation(animeName) {
-    if (!animeName || animeName.trim() === "") return null;
+// Make function globally accessible
+window.getRecommendation = function(animeName) {
+    console.log("Searching for:", animeName); // Debug log
+    
+    if (!animeName || animeName.trim() === "") {
+        console.log("Empty anime name");
+        return null;
+    }
     
     const searchTerm = animeName.toLowerCase().trim();
+    console.log("Search term:", searchTerm); // Debug log
     
     // Find exact or partial match
     let bestMatch = null;
@@ -143,35 +149,80 @@ function getRecommendation(animeName) {
     
     for (const entry of bookDatabase) {
         const animeEntry = entry.anime.toLowerCase();
+        
+        // Exact match
         if (animeEntry === searchTerm) {
-            bestMatch = entry;
-            break;
+            console.log("Exact match found:", entry.book);
+            return entry;
         }
+        
+        // Partial match
         if (animeEntry.includes(searchTerm) || searchTerm.includes(animeEntry)) {
             const score = Math.min(animeEntry.length, searchTerm.length) / Math.max(animeEntry.length, searchTerm.length);
-            if (score > bestScore) {
+            if (score > bestScore && score > 0.6) {
                 bestScore = score;
                 bestMatch = entry;
+                console.log("Partial match:", entry.book, "Score:", score);
             }
         }
     }
     
-    // Fallback if no direct match
-    if (!bestMatch) {
-        const keywords = searchTerm.split(' ');
-        let genreMatch = null;
-        for (const entry of bookDatabase) {
-            for (const kw of keywords) {
-                if (kw.length > 3 && (entry.genre.includes(kw) || entry.desc.toLowerCase().includes(kw))) {
-                    genreMatch = entry;
-                    break;
-                }
-            }
-            if (genreMatch) break;
-        }
-        if (genreMatch) bestMatch = genreMatch;
-        else bestMatch = bookDatabase[Math.floor(Math.random() * bookDatabase.length)];
+    // If found a partial match
+    if (bestMatch) {
+        console.log("Best partial match:", bestMatch.book);
+        return bestMatch;
     }
     
-    return bestMatch;
-}
+    // Fallback: try to match by genre based on keywords
+    console.log("No direct match, trying keyword matching...");
+    const keywords = searchTerm.split(' ');
+    let genreMatch = null;
+    
+    for (const entry of bookDatabase) {
+        for (const kw of keywords) {
+            if (kw.length > 3 && (entry.genre.includes(kw) || entry.desc.toLowerCase().includes(kw))) {
+                genreMatch = entry;
+                console.log("Genre match found:", entry.book, "Keyword:", kw);
+                break;
+            }
+        }
+        if (genreMatch) break;
+    }
+    
+    if (genreMatch) return genreMatch;
+    
+    // Ultimate fallback: random popular book
+    console.log("Using fallback random book");
+    const fallbackBooks = [
+        {
+            anime: "any",
+            book: "The Name of the Wind",
+            author: "Patrick Rothfuss",
+            desc: "A lyrical fantasy about storytelling, magic, and a legendary figure — perfect for anime lovers seeking rich worldbuilding.",
+            genre: "fantasy",
+            link: "https://www.goodreads.com/book/show/186074.The_Name_of_the_Wind"
+        },
+        {
+            anime: "any",
+            book: "Dune",
+            author: "Frank Herbert",
+            desc: "An epic sci-fi masterpiece about politics, religion, and ecology on a desert planet — for fans of complex worldbuilding.",
+            genre: "sci-fi",
+            link: "https://www.goodreads.com/book/show/44767458-dune"
+        },
+        {
+            anime: "any",
+            book: "The Night Circus",
+            author: "Erin Morgenstern",
+            desc: "A magical competition between two illusionists in a mysterious circus — for those who love whimsical, atmospheric stories.",
+            genre: "magical realism",
+            link: "https://www.goodreads.com/book/show/9361589-the-night-circus"
+        }
+    ];
+    
+    return fallbackBooks[Math.floor(Math.random() * fallbackBooks.length)];
+};
+
+// Also export for debugging
+console.log("Recommendations.js loaded successfully");
+console.log("Database size:", bookDatabase.length);
